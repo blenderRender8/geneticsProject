@@ -50,7 +50,7 @@
   
     <script>
             var canvasWidth = 1280;
-            var canvasHeight = 720;
+            var canvasHeight = 768;
             
             var populationSize;
             var p; //frequency of dominant allele
@@ -96,41 +96,50 @@
                     hImage.src = "mixed_sprite.png";
                     qImage = new Image(64, 64), //image is of size 64x64
                     qImage.src = "blue_sprite.png";
+                    var ySpacing = 640 / pSize;
+                    var startingY = 64;
                     for (let i = 0; i < pSize; i++){
                         const pClass = {
                             type: 1, //1 is dominant
                             image : pImage,
                             drawMe : function() {
                                 ctx = display.canvas.getContext("2d");
-                                ctx.drawImage(this.image, 64, 64);
+                                ctx.drawImage(this.image, 64, startingY);
                             }
                         };
                         pList.push(pClass);
                         pClass.drawMe();
+                        startingY += ySpacing;
                     }
+                    var ySpacing = 64 / hSize;
+                    var startingY = 64;
                     for (let i = 0; i < hSize; i++){
                         const hClass = {
                             type: 0, //0 is heterozygous
                             image : hImage,
                             drawMe : function() {
                                 ctx = display.canvas.getContext("2d");
-                                ctx.drawImage(this.image, 9.5*64, 64);
+                                ctx.drawImage(this.image, 9.5*64, startingY);
                             }
                         };
                         hList.push(hClass);
                         hClass.drawMe();
+                        startingY += ySpacing;
                     }
+                    var ySpacing = 64 / qSize;
+                    var startingY = 64;
                     for (let i = 0; i < qSize; i++){
                         const qClass = {
                             type: -1, //-1 is recessive
                             image : qImage,
                             drawMe : function() {
                                 ctx = display.canvas.getContext("2d");
-                                ctx.drawImage(this.image, 1280-2*64, 64);
+                                ctx.drawImage(this.image, 1280-2*64, startingY);
                             }
                         };
                         qList.push(qClass);
                         qClass.drawMe();
+                        startingY += ySpacing;
                     }
                     console.log(pList);
                     console.log(hList);

@@ -1,5 +1,153 @@
 <!DOCTYPE html>
-<head>
-<h1> bottom text </h1>
+<html>
+<head onload = "initHTML()">
+    <title>Genetics Simulator (Hardy-Weinberg Equation)</title>
+<script>
+    function initHTML(){
+       gaming.start();
+    }
+    var gaming = {
+        h1HTML: document.createElement("h1"),
+        start: function() {
+            this.h1HTML.innerHTML = "Genetics Simulator";
+            document.body.insertBefore(this.h1HTML, document.head.childNodes[0]);
+        }
+    }
+</script>
+<style>
+  canvas {
+    border:2px solid black;
+    background-color: #87ceeb;
+  }
+</style>
+
 </head>
+<body onload="startGame()">
+    <br>
+    <tr>
+        <td>
+            <label for="popSizeLabel">Set Population Size (between 10-10000 individuals):</label>
+        </td>
+        <td>
+            <input type="number" id="popSize" step="1">
+        </td>
+        <br>
+        <td>
+            <label for="pLabel">"p" as decimal (frequency of dominant allele)</label>
+        </td>
+        <td>
+            <input type="number" id="p" step="1">
+        </td>
+        <br>
+        <td>
+            <label for="qLabel">"q" as a decimal (frequency of recessive allele)</label>
+        </td>
+        <td>
+            <input type="number" id="q" step="1">
+        </td>
+    </tr>
+    <br><button onclick="pushButton()" class="halflight">Start Simluation</button>
+  
+    <script>
+            var canvasWidth = 1280;
+            var canvasHeight = 720;
+            
+            var populationSize;
+            var p; //frequency of dominant allele
+            var q; //frequency of recessive allele
+            var buttonPushed = false;
+            function startGame() {
+              display.start();
+            }
+          
+            var display = {
+              canvas: document.createElement("canvas"),
+              h1HTML: document.createElement("h1"),
+              start: function() {
+                this.h1HTML.innerHTML = "Genetics Simulator";
+                document.body.insertBefore(this.h1HTML, document.body.childNodes[0]);
+                
+                this.canvas.width = canvasWidth;
+                this.canvas.height = canvasHeight;
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[1]);
+              }
+            }
+            function pushButton(){
+                p = parseFloat(document.getElementById("p").value);
+                q = parseFloat(document.getElementById("q").value);
+                console.log(p + " " + q);
+                console.log(p + q);
+                populationSize = parseFloat(document.getElementById("popSize").value);
+                if (p+q == 1 && populationSize >= 10 && populationSize <= 10000){ //fufills all requirements
+                    const pList = []; //list of dominant individuals
+                    const hList = []; //list of heterozygous individuals
+                    const qList = []; //list of reccesive individuals
+                    const factors = hwEquation(p, q);
+                    const pFactor = factors[0];
+                    const hFactor = factors[1]; //heterozygous
+                    const qFactor = factors[2];
+                    var pSize = Math.round(pFactor * populationSize);
+                    var hSize = Math.round(hFactor * populationSize);
+                    var qSize = Math.round(qFactor * populationSize);
+                    pImage = new Image(64, 64), //image is of size 64x64
+                    pImage.src = "red_sprite.png";
+                    hImage = new Image(64, 64), //image is of size 64x64
+                    hImage.src = "mixed_sprite.png";
+                    qImage = new Image(64, 64), //image is of size 64x64
+                    qImage.src = "blue_sprite.png";
+                    for (let i = 0; i < pSize; i++){
+                        const pClass = {
+                            type: 1, //1 is dominant
+                            image : pImage,
+                            drawMe : function() {
+                                ctx = display.canvas.getContext("2d");
+                                ctx.drawImage(this.image, 64, 64);
+                            }
+                        };
+                        pList.push(pClass);
+                        pClass.drawMe();
+                    }
+                    for (let i = 0; i < hSize; i++){
+                        const hClass = {
+                            type: 0, //0 is heterozygous
+                            image : hImage,
+                            drawMe : function() {
+                                ctx = display.canvas.getContext("2d");
+                                ctx.drawImage(this.image, 9.5*64, 64);
+                            }
+                        };
+                        hList.push(hClass);
+                        hClass.drawMe();
+                    }
+                    for (let i = 0; i < qSize; i++){
+                        const qClass = {
+                            type: -1, //-1 is recessive
+                            image : qImage,
+                            drawMe : function() {
+                                ctx = display.canvas.getContext("2d");
+                                ctx.drawImage(this.image, 1280-2*64, 64);
+                            }
+                        };
+                        qList.push(qClass);
+                        qClass.drawMe();
+                    }
+                    console.log(pList);
+                    console.log(hList);
+                    console.log(qList);
+                } else{
+                    alert("Make sure your p and q values sum to 1, and that p < 1 and q < 1; As well as 10≤popSize≤10000");
+                }
+            }
+        
+            function hwEquation(p, q){
+                return [p*p, 2*p*q, q*q];
+            }
+
+            
+              
+        </script>
+
+</body>
+
 </html>

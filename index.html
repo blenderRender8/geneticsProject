@@ -23,6 +23,23 @@
 
 </head>
 <body onload="startGame()">
+    <tr>
+        <td>
+        <h3 id="dominantLabel">Homozygous Dominant Ratio:</h3>
+        <p id="pDisplay">ratio</p>
+        </td>
+        
+        <td>
+        <h3 id="heterozygousLabel">Heterozygous Ratio:</h3>
+        <p id="hDisplay">ratio</p>
+        </td>
+        
+        <td>
+        <h3 id="recessiveLabel">Homozygous Recessive Ratio:</h3>
+        <p id="qDisplay">ratio</p>
+        </td>
+    </tr>
+
     <br>
     <tr>
         <td>
@@ -169,6 +186,9 @@
                     console.log(pList);
                     console.log(hList);
                     console.log(qList);
+                    document.getElementById("pDisplay").innerHTML = "Ratio: " + (pSize / populationSize);
+                    document.getElementById("hDisplay").innerHTML = "Ratio: " + (hSize / populationSize);
+                    document.getElementById("qDisplay").innerHTML = "Ratio: " + (qSize / populationSize);
                 } else{
                     alert("Make sure your p and q values sum to 1, and that p < 1 and q < 1; As well as 10≤popSize≤10000");
                 }

@@ -74,12 +74,15 @@
               }
             }
             function pushButton(){
+                
                 p = parseFloat(document.getElementById("p").value);
                 q = parseFloat(document.getElementById("q").value);
                 console.log(p + " " + q);
                 console.log(p + q);
                 populationSize = parseFloat(document.getElementById("popSize").value);
                 if (p+q == 1 && populationSize >= 10 && populationSize <= 10000){ //fufills all requirements
+                    ctx = display.canvas.getContext("2d");
+                    ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
                     const pList = []; //list of dominant individuals
                     const hList = []; //list of heterozygous individuals
                     const qList = []; //list of reccesive individuals
@@ -96,45 +99,67 @@
                     hImage.src = "mixed_sprite.png";
                     qImage = new Image(64, 64), //image is of size 64x64
                     qImage.src = "blue_sprite.png";
-                    var ySpacing = 640 / pSize;
+                    var ySpacing = 640 / 10;
                     var startingY = 64;
+                    var xSpacing = (384 * 10)/ pSize;
+                    var startingX = 0;
                     for (let i = 0; i < pSize; i++){
+                        if (i % 10 == 0 && i != 0){
+                            console.log("moving down");
+                            startingX += xSpacing;
+                            startingY = 64;
+                        }
                         const pClass = {
                             type: 1, //1 is dominant
                             image : pImage,
                             drawMe : function() {
                                 ctx = display.canvas.getContext("2d");
-                                ctx.drawImage(this.image, 64, startingY);
+                                ctx.drawImage(this.image, startingX, startingY);
                             }
                         };
                         pList.push(pClass);
                         pClass.drawMe();
                         startingY += ySpacing;
+
                     }
-                    var ySpacing = 64 / hSize;
+                    var ySpacing = 640 / 10;
                     var startingY = 64;
+                    var xSpacing = (384 * 10)/ hSize;
+                    var startingX = 448-16-8;
                     for (let i = 0; i < hSize; i++){
+                        if (i % 10 == 0 && i != 0){
+                            console.log("moving down");
+                            startingX += xSpacing;
+                            startingY = 64;
+                        }
                         const hClass = {
                             type: 0, //0 is heterozygous
                             image : hImage,
                             drawMe : function() {
                                 ctx = display.canvas.getContext("2d");
-                                ctx.drawImage(this.image, 9.5*64, startingY);
+                                ctx.drawImage(this.image, startingX, startingY);
                             }
                         };
                         hList.push(hClass);
                         hClass.drawMe();
                         startingY += ySpacing;
                     }
-                    var ySpacing = 64 / qSize;
+                    var ySpacing = 640 / 10;
                     var startingY = 64;
+                    var xSpacing = (384 * 10)/ qSize;
+                    var startingX = 1280-64;
                     for (let i = 0; i < qSize; i++){
+                        if (i % 10 == 0 && i != 0){
+                            console.log("moving down");
+                            startingX -= xSpacing;
+                            startingY = 64;
+                        }
                         const qClass = {
                             type: -1, //-1 is recessive
                             image : qImage,
                             drawMe : function() {
                                 ctx = display.canvas.getContext("2d");
-                                ctx.drawImage(this.image, 1280-2*64, startingY);
+                                ctx.drawImage(this.image, startingX, startingY);
                             }
                         };
                         qList.push(qClass);

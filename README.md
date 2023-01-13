@@ -1,6 +1,6 @@
 # geneticsProject
 
-If you're not a developer, you're probably not going to see this.
+
 
 Genetics Project utilizing Hardy-Weinberg equations.
 

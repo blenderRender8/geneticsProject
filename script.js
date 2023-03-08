@@ -167,6 +167,18 @@ function startSimulation(){
     console.log(recessive);
     
 }
+function calculateNoReplacement(total, dom, het, rec, domdead, hetdead, recdead){
+    dom *= (1 - domdead); //dominant individuals post thanos snap
+    het *= (1 - hetdead); //heterozygous individuals post thanos snap
+    rec *= (1 - recdead); //recessive individuals post thanos snap
+    
+    t = dom + het + rec; //total individuals post thanos snap
+    
+    p_2 = dom / t; //new p value after thanos snap squared
+    p_2 = Math.sqrt(p_2); //new p value after thanos snap
+    q_2 = 1 - p_2; //new q value after thanos snap
+    return [p_2, q_2]; //final values after thanos snap
+}
 
 function checkAllele(decimal, returnValue){
     //returns 1 if dominant, 0 if recessive

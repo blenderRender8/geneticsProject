@@ -14,51 +14,7 @@
         }
     }
 </script>
-  <script>
-    var canvasWidth = 1366;
-    var canvasHeight = 768;
-    
-
-    var populationSize;
-    var p; //frequency of dominant allele
-    var q; //frequency of recessive allele
-    var buttonPushed = false;
-
-    var display = {
-        canvas: document.createElement("canvas"),
-        h1HTML: document.createElement("h1"),
-        start: function() {
-        this.h1HTML.innerHTML = "Genetics Simulator";
-            document.body.insertBefore(this.h1HTML, document.body.childNodes[0]);
-            
-            this.canvas.width = canvasWidth;
-            this.canvas.height = canvasHeight;
-            this.context = this.canvas.getContext("2d");
-            document.body.insertBefore(this.canvas, document.body.childNodes[1]);
-        }
-    }
-
-    function startGame() {
-        display.start();
-    }
-      pImage = new Image(64, 64), //image is of size 64x64
-      pImage.onload = function(){
-          //send help
-      };
-      pImage.src = "red_sprite.png";
-      
-      hImage = new Image(64, 64), //image is of size 64x64
-      hImage.src = "mixed_sprite.png";
-      hImage.onload = function(){
-          //send help
-      };
-      
-      qImage = new Image(64, 64), //image is of size 64x64
-      qImage.onload = function(){
-          //send help
-      };
-      qImage.src = "blue_sprite.png";
-</script>
+  
 
 <link rel="stylesheet" href="styles.css">
 
@@ -77,15 +33,11 @@
         <a href="#about">About</a>
         <a href="https://github.com/blenderRender8/geneticsProject" target="_blank">Repository</a>
     </header>
-
-    <div class="left">  
+    <div class="big">
+    <div class="canv">
+    <canvas id="canvas"></canvas>
     </div>
-    
-    <div id="right">
-    </div>
-    
-    <br><button onclick="pushButton()" class="button prediction" id="startPrediction"> Start Prediction</button>
-    <button type="button" class="button simulation" id="startSimulation" onclick = "startSimulation()">Start Simulation</button>
+    <div class="box-inner-border" id="toEnter">
     <tr>
         <td>
         <h3 id="dominantLabel">Homozygous Dominant Ratio:</h3>
@@ -126,210 +78,93 @@
             <input type="number" id="q" step="1">
         </td>
     </tr>
-    
-<script src="script.js"></script>
+    <br><br>
+    <tr>
+        <td>
+            <label for="dominantKill">% of Homozygous Dominant to Kill:</label>
+        </td>
+        <td>
+            <input type="number" id="a" step="1">
+        </td>
+        <br>
+        <td>
+            <label for="heterozygousKill">% of Heterozygous to Kill:</label>
+        </td>
+        <td>
+            <input type="number" id="b" step="1">
+        </td>
+        <br>
+        <td>
+            <label for="recessiveKill">% of Homozygous Recessive to Kill:</label>
+        </td>
+        <td>
+            <input type="number" id="c" step="1">
+        </td>
+    </tr>
+    </div>
+    <br>
+    </div>
+    <div class="left">
+        <button onclick="pushButton()" class="button prediction" id="startPrediction"> Start Prediction</button>
+    </div>
+    <br>
+    <div id="right">
+        <button type="button" class="button simulation" id="startSimulation" onclick = "startSimulation()">Start Simulation</button>
+    </div>
+
 <script>
-    /*
-    var canvasWidth = 1366;
-    var canvasHeight = 768;
-
-    var populationSize;
-    var p; //frequency of dominant allele
-    var q; //frequency of recessive allele
-    var buttonPushed = false;
-
-    var display = {
-        canvas: document.createElement("canvas"),
-        h1HTML: document.createElement("h1"),
-        start: function() {
-        this.h1HTML.innerHTML = "Genetics Simulator";
-            document.body.insertBefore(this.h1HTML, document.body.childNodes[0]);
-            
-            this.canvas.width = canvasWidth;
-            this.canvas.height = canvasHeight;
-            this.context = this.canvas.getContext("2d");
-            document.body.insertBefore(this.canvas, document.body.childNodes[1]);
-        }
+    function determineSize(){
+        var w = window.innerWidth;
+        var h = window.innerHeight;
     }
+      console.log("running startGame0");
+      var canvasWidth = 1280;
+      var canvasHeight = 720;
+      
 
-    function startGame() {
-        display.start();
-    }
+      var populationSize;
+      var p; //frequency of dominant allele
+      var q; //frequency of recessive allele
+      var buttonPushed = false;
 
-    function pushButton(){
-        p = parseFloat(document.getElementById("p").value);
-        q = parseFloat(document.getElementById("q").value);
-        console.log(p + " " + q);
-        console.log(p + q);
-        populationSize = parseFloat(document.getElementById("popSize").value);
-        if (p+q == 1 && populationSize >= 10 && populationSize <= 10000){ //fufills all requirements
-            ctx = display.canvas.getContext("2d");
-            ctx.clearRect(0, 0, display.canvas.width, display.canvas.height);
-            const pList = []; //list of dominant individuals
-            const hList = []; //list of heterozygous individuals
-            const qList = []; //list of reccesive individuals
-            const factors = hwEquation(p, q);
-            const pFactor = factors[0];
-            const hFactor = factors[1]; //heterozygous
-            const qFactor = factors[2];
-            var pSize = Math.round(pFactor * populationSize);
-            var hSize = Math.round(hFactor * populationSize);
-            var qSize = Math.round(qFactor * populationSize);
-            pImage = new Image(64, 64), //image is of size 64x64
-            pImage.src = "red_sprite.png";
-            hImage = new Image(64, 64), //image is of size 64x64
-            hImage.src = "mixed_sprite.png";
-            qImage = new Image(64, 64), //image is of size 64x64
-            qImage.src = "blue_sprite.png";
-            var ySpacing = 640 / 10;
-            var startingY = 64;
-            if (Math.round(pSize / 10) < 7){
-                var xSpacing = 64;
-            } else{
-                var xSpacing = (384 * 10)/ pSize;
-            }
-            var startingX = 0;
-            for (let i = 0; i < pSize; i++){
-                if (i % 10 == 0 && i != 0){
-                    console.log("moving down");
-                    startingX += xSpacing;
-                    startingY = 64;
-                }
-                const pClass = {
-                    type: 1, //1 is dominant
-                    image : pImage,
-                    drawMe : function() {
-                        ctx = display.canvas.getContext("2d");
-                        ctx.drawImage(this.image, startingX, startingY);
-                    }
-                };
-                pList.push(pClass);
-                pClass.drawMe();
-                startingY += ySpacing;
-
-            }
-            var ySpacing = 640 / 10;
-            var startingY = 64;
-            var xSpacing = (384 * 10)/ hSize;
-            var startingX = 448-16-8;
-            for (let i = 0; i < hSize; i++){
-                if (i % 10 == 0 && i != 0){
-                    console.log("moving down");
-                    startingX += xSpacing;
-                    startingY = 64;
-                }
-                const hClass = {
-                    type: 0, //0 is heterozygous
-                    image : hImage,
-                    drawMe : function() {
-                        ctx = display.canvas.getContext("2d");
-                        ctx.drawImage(this.image, startingX, startingY);
-                    }
-                };
-                hList.push(hClass);
-                hClass.drawMe();
-                startingY += ySpacing;
-            }
-            var ySpacing = 640 / 10;
-            var startingY = 64;
-            if (Math.round(qSize / 10) < 10){
-                var xSpacing = 64;
-            } else{
-                var xSpacing = (384 * 10)/ qSize;
-            }
-            var startingX = 1280-64;
-            for (let i = 0; i < qSize; i++){
-                if (i % 10 == 0 && i != 0){
-                    console.log("moving down");
-                    startingX -= xSpacing;
-                    startingY = 64;
-                }
-                const qClass = {
-                    type: -1, //-1 is recessive
-                    image : qImage,
-                    drawMe : function() {
-                        ctx = display.canvas.getContext("2d");
-                        ctx.drawImage(this.image, startingX, startingY);
-                    }
-                };
-                qList.push(qClass);
-                qClass.drawMe();
-                startingY += ySpacing;
-            }
-            console.log(pList);
-            console.log(hList);
-            console.log(qList);
-            document.getElementById("pDisplay").innerHTML = "Ratio: " + (pSize / populationSize);
-            document.getElementById("hDisplay").innerHTML = "Ratio: " + (hSize / populationSize);
-            document.getElementById("qDisplay").innerHTML = "Ratio: " + (qSize / populationSize);
-            ctx = display.canvas.getContext("2d");
-            ctx.font = "24px Avenir Next";
-            ctx.fillText("Predicted Population:", 4, 20);
-            ctx.font = "20px Avenir Next";
-            ctx.fillText("Homozygous Dominant: " + pSize + " individuals", 20, 48);
-            ctx.fillText("Heterozygous: " + hSize + " individuals", 500, 48);
-            ctx.fillText("Homozygous Recessive: " + qSize + " individuals", 900, 48);
-            document.getElementById("startSimulation").disabled = false;
-        } else {
-            alert("Make sure your p and q values sum to 1, and that p < 1 and q < 1; As well as 10≤popSize≤10000");
-            document.getElementById("startSimulation").disabled = true;
-        }
-    }
-
-    function hwEquation(p, q){
-        return [p*p, 2*p*q, q*q];
-    }
-
-    function draw(text, x, y) {
-        const ctx = display.canvas.getContext("2d");
-        ctx.font = "48px serif";
-        ctx.fillText(text, 10, 50);
-    }
-
-    function draw(text, fontSize, fontName, x, y) {
-        const ctx = display.canvas.getContext("2d");
-        ctx.font = fontSize+"px " + fontName;
-        ctx.fillText(text, x, y);
-    }
-
-    function startSimulation(){
-        p = parseFloat(document.getElementById("p").value);
-        q = parseFloat(document.getElementById("q").value);
-        populationSize = parseFloat(document.getElementById("popSize").value);
-        totalAlleles = populationSize * 2;
-        dominantAlleles = Math.round(totalAlleles * p);
-        recessiveAlleles = Math.round(totalAlleles * q);
-        population = [];
-        const dominantL = [];
-        const heterozygousL = [];
-        const recessiveL = [];
-        //sampling w/ replacement
-        for (let index = 0; index < populationSize; index++){
-            allele1 = checkAllele(p);
-            allele2 = checkAllele(p);
-            sNum = allele1 + allele2;
-            population.push(sNum); // 1+1 = 2 is dominant, 1+0 = 1 is heterozygous, 0+0 = 0 is recessive
-            if (sNum == 0){
-                recessiveL.push(sNum);
-            } else if (sNum == 1){
-                heterozygousL.push(sNum);
-            } else if (sNum == 2){
-                dominantL.push(sNum);
-            }
-        }
-        console.log
-    }
-
-    function checkAllele(decimal, returnValue){
-        //returns 1 if dominant, 0 if recessive
-        num = Math.random();
-        if (num < decimal){
-            return 1;
-        }
-        return 0;
-    }
-*/
+      var display = {
+          canvas: document.getElementById("canvas"),
+          h1HTML: document.createElement("h1"),
+          start: function() {
+              console.log("CANVAS: " + canvas);
+              this.h1HTML.innerHTML = "Genetics Simulator";
+              document.body.insertBefore(this.h1HTML, document.body.childNodes[0]);
+              
+              this.canvas.width = canvasWidth;
+              this.canvas.height = canvasHeight;
+              this.context = this.canvas.getContext("2d");
+              //document.body.insertBefore(this.canvas, document.body.childNodes[1]);
+          }
+      }
+  function startGame() {
+      display.start();
+  }
+    pImage = new Image(64, 64), //image is of size 64x64
+    pImage.onload = function(){
+        //send help
+    };
+    pImage.src = "red_sprite.png";
+    
+    hImage = new Image(64, 64), //image is of size 64x64
+    hImage.src = "mixed_sprite.png";
+    hImage.onload = function(){
+        //send help
+    };
+    
+    qImage = new Image(64, 64), //image is of size 64x64
+    qImage.onload = function(){
+        //send help
+    };
+    qImage.src = "blue_sprite.png";
+    startGame();
 </script>
+
+<script src="script.js"></script>
 </body>
 
 </html>

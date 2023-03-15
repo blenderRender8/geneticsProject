@@ -24,10 +24,25 @@ class Population {
         const hList = []; //list of heterozygous individuals
         const qList = []; //list of reccesive individuals
     }
+    pSize = function(){
+        return pList.size();
+    }
+    hSize = function(){
+        return hList.size();
+    }
+    qSize = function(){
+        return qList.size();
+    }
+    kill = function(dP, hP, qP){
+        
+    }
 };
 const population = new Population();
 population.addP(0);
+
 function drawStuff(pSize, hSize, qSize){
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
     var ySpacing = 640 / 10;
     var startingY = 64;
     if (Math.round(pSize / 10) < 7){
@@ -106,6 +121,27 @@ function drawStuff(pSize, hSize, qSize){
         qClass.drawMe();
         startingY += ySpacing;
     }
+}
+function calculateNoReplacement(total, dom, het, rec, domdead, hetdead, recdead){
+    dom *= (1 - domdead); //dominant individuals post thanos snap
+    het *= (1 - hetdead); //heterozygous individuals post thanos snap
+    rec *= (1 - recdead); //recessive individuals post thanos snap
+    
+    t = dom + het + rec; //total individuals post thanos snap
+    
+    p_2 = dom / t; //new p value after thanos snap squared
+    p_2 = Math.sqrt(p_2); //new p value after thanos snap
+    q_2 = 1 - p_2; //new q value after thanos snap
+    return [p_2, q_2]; //final values after thanos snap
+}
+
+function checkAllele(decimal, returnValue){
+    //returns 1 if dominant, 0 if recessive
+    num = Math.random();
+    if (num < decimal){
+        return 1;
+    }
+    return 0;
 }
 function pushButton(){
     p = parseFloat(document.getElementById("p").value);
@@ -248,7 +284,7 @@ function startSimulation(){
     totalAlleles = populationSize * 2;
     dominantAlleles = Math.round(totalAlleles * p);
     recessiveAlleles = Math.round(totalAlleles * q);
-    population = [];
+    population.clear();
     var dominant = 0;
     var heterozygous = 0;
     var recessive = 0;
@@ -260,10 +296,8 @@ function startSimulation(){
         allele1 = checkAllele(p);
         allele2 = checkAllele(p);
         sNum = allele1 + allele2;
-        population.push(sNum); // 1+1 = 2 is dominant, 1+0 = 1 is heterozygous, 0+0 = 0 is recessive
         if (sNum == 0){
             recessive++;
-            drawRec.push();
         } else if (sNum == 1){
             heterozygous++;
         } else if (sNum == 2){
@@ -274,25 +308,21 @@ function startSimulation(){
     console.log(dominant);
     console.log(heterozygous);
     console.log(recessive);
-}
-function calculateNoReplacement(total, dom, het, rec, domdead, hetdead, recdead){
-    dom *= (1 - domdead); //dominant individuals post thanos snap
-    het *= (1 - hetdead); //heterozygous individuals post thanos snap
-    rec *= (1 - recdead); //recessive individuals post thanos snap
+    drawStuff(dominant, heterozygous, recessive);
     
-    t = dom + het + rec; //total individuals post thanos snap
-    
-    p_2 = dom / t; //new p value after thanos snap squared
-    p_2 = Math.sqrt(p_2); //new p value after thanos snap
-    q_2 = 1 - p_2; //new q value after thanos snap
-    return [p_2, q_2]; //final values after thanos snap
+    document.getElementById("pDisplay").innerHTML = "Ratio: " + (dominant / populationSize);
+    document.getElementById("hDisplay").innerHTML = "Ratio: " + (heterozygous / populationSize);
+    document.getElementById("qDisplay").innerHTML = "Ratio: " + (recessive / populationSize);
+    ctx = display.canvas.getContext("2d");
+    ctx.font = "24px Avenir Next";
+    ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
+    ctx.font = "20px serif";
+    ctx.fillText("Homozygous Dominant: " + dominant + " individuals", 20, 48);
+    ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
+    ctx.fillText("Homozygous Recessive: " + recessive + " individuals", 900, 48);
+    //document.getElementById("startSimulation").disabled = false;
 }
 
-function checkAllele(decimal, returnValue){
-    //returns 1 if dominant, 0 if recessive
-    num = Math.random();
-    if (num < decimal){
-        return 1;
-    }
-    return 0;
+function thanosSnap(){
+    
 }

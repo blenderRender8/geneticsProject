@@ -14,8 +14,9 @@
         }
     }
 </script>
-  
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="message.js"></script>  
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -33,83 +34,53 @@
         <a href="#about">About</a>
         <a href="https://github.com/blenderRender8/geneticsProject" target="_blank">Repository</a>
     </header>
+
     <div class="big">
     <div class="canv">
     <canvas id="canvas"></canvas>
     </div>
     <div class="box-inner-border" id="toEnter">
-    <tr>
-        <td>
-        <h3 id="dominantLabel">Homozygous Dominant Ratio:</h3>
-        <p id="pDisplay">...</p>
-        </td>
         
-        <td>
-        <h3 id="heterozygousLabel">Heterozygous Ratio:</h3>
-        <p id="hDisplay">...</p>
-        </td>
+    <h3 id="dominantLabel">Homozygous Dominant:</h3>
+    <p id="hdDisplay">...</p>
+
+    <h3 id="heterozygousLabel">Heterozygous:</h3>
+    <p id="heteroDisplay">...</p>
+
+    <h3 id="recessiveLabel">Homozygous Recessive:</h3>
+    <p id="hrDisplay">...</p>
+
+    <label for="pLabel"> P value:</label>
+    <p id="p">...</p>
         
-        <td>
-        <h3 id="recessiveLabel">Homozygous Recessive Ratio:</h3>
-        <p id="qDisplay">...</p>
-        </td>
-    </tr>
+    <label for="qlabel"> Q value:</label>
+    <p id="q">...</p>
 
     <br>
-    <tr>
-        <td>
-            <label for="popSizeLabel">Set Population Size (between 10-10000 individuals):</label>
-        </td>
-        <td>
-            <input type="number" id="popSize" step="0.01">
-        </td>
-        <br>
-        <td>
-            <label for="pLabel">"p" as decimal (frequency of dominant allele)</label>
-        </td>
-        <td>
-            <input type="number" id="p" step="0.01">
-        </td>
-        <br>
-        <td>
-            <label for="qLabel">"q" as a decimal (frequency of recessive allele)</label>
-        </td>
-        <td>
-            <input type="number" id="q" step="0.01">
-        </td>
-    </tr>
-    <br><br>
-    <tr>
-        <td>
-            <label for="dominantKill">% of Homozygous Dominant to Kill:</label>
-        </td>
-        <td>
-            <input type="number" id="pKill" step="0.01">
-        </td>
-        <br>
-        <td>
-            <label for="heterozygousKill">% of Heterozygous to Kill:</label>
-        </td>
-        <td>
-            <input type="number" id="hKill" step="0.01">
-        </td>
-        <br>
-        <td>
-            <label for="recessiveKill">% of Homozygous Recessive to Kill:</label>
-        </td>
-        <td>
-            <input type="number" id="qKill" step="0.01">
-        </td>
-    </tr>
+    <label for="popSizeLabel">Set Population Size (between 10-10000 individuals):</label>
+    <input type="number" id="popSize" step="1">
+    <br> <br>
+    <label for="pLabel">p and q frequencies</label>
+    <input type="range" id="pqslider" value="0" min="0" max="1" value="0" step="0.01" class="slider">
+    <div id="h4-container"><div id="h4-subcontainer"><h4><span></span></h4></div></div>
+    <br>
+    <label for="dominantKill">% of Homozygous Dominant to Kill:</label>
+    <input type="number" id="a" step="1">
+    <br>
+    <label for="heterozygousKill">% of Heterozygous to Kill:</label>
+    <input type="number" id="b" step="1">
+    <br>
+    <label for="recessiveKill">% of Homozygous Recessive to Kill:</label>
+    <input type="number" id="c" step="1">
     </div>
     <br>
     </div>
     <div class="left">
-        <button onclick="pushButton()" class="button prediction" id="startPrediction"> Start Prediction</button>
+    <button onclick="startPrediction()" class="button prediction" id="startPrediction"> Start Prediction</button>
     </div>
     <br>
     <div id="right">
-        <button type="button" class="button simulation" id="startSimulation" onclick = "startSimulation()">Start Simulation</button>
+    <button type="button" class="button simulation" id="startSimulation" onclick = "startSimulation()">Start Simulation</button>
     </div>
 
 <script>

@@ -143,9 +143,9 @@ function checkAllele(decimal, returnValue){
     }
     return 0;
 }
-function pushButton(){
-    p = parseFloat(document.getElementById("p").value);
-    q = parseFloat(document.getElementById("q").value);
+function startPrediction(){
+    p = parseFloat(document.getElementById("p").innerHTML);
+    q = parseFloat(document.getElementById("q").innerHTML);
     console.log(p + " " + q);
     console.log(p + q);
     populationSize = parseFloat(document.getElementById("popSize").value);
@@ -163,94 +163,14 @@ function pushButton(){
         var hSize = Math.round(hFactor * populationSize);
         var qSize = Math.round(qFactor * populationSize);
         
-        /*
-        var ySpacing = 640 / 10;
-        var startingY = 64;
-        if (Math.round(pSize / 10) < 7){
-            var xSpacing = 64;
-        } else{
-            var xSpacing = (384 * 10)/ pSize;
-        }
-        var startingX = 0;
-        for (let i = 0; i < pSize; i++){
-            if (i % 10 == 0 && i != 0){
-                console.log("moving down");
-                startingX += xSpacing;
-                startingY = 64;
-            }
-            const pClass = {
-                type: 1, //1 is dominant
-                image : pImage,
-                drawMe : function() {
-                    ctx = display.canvas.getContext("2d");
-                    ctx.drawImage(this.image, startingX, startingY);
-                }
-            };
-            pList.push(pClass);
-            pClass.drawMe();
-            startingY += ySpacing;
-
-        }
-        var ySpacing = 640 / 10;
-        var startingY = 64;
-        var xSpacing = (384 * 10)/ hSize;
-        var startingX = 448-16-8;
-        for (let i = 0; i < hSize; i++){
-            if (i % 10 == 0 && i != 0){
-                console.log("moving down");
-                startingX += xSpacing;
-                startingY = 64;
-            }
-            const hClass = {
-                type: 0, //0 is heterozygous
-                image : hImage,
-                drawMe : function() {
-                    ctx = display.canvas.getContext("2d");
-                    ctx.drawImage(this.image, startingX, startingY);
-                }
-            };
-            hList.push(hClass);
-            hClass.drawMe();
-            startingY += ySpacing;
-        }
-        var ySpacing = 640 / 10;
-        var startingY = 64;
-        if (Math.round(qSize / 10) < 10){
-            var xSpacing = 64;
-        } else{
-            var xSpacing = (384 * 10)/ qSize;
-        }
-        var startingX = 1280-64;
-        for (let i = 0; i < qSize; i++){
-            if (i % 10 == 0 && i != 0){
-                console.log("moving down");
-                startingX -= xSpacing;
-                startingY = 64;
-            }
-            const qClass = {
-                type: -1, //-1 is recessive
-                image : qImage,
-                drawMe : function() {
-                    ctx = display.canvas.getContext("2d");
-                    ctx.drawImage(this.image, startingX, startingY);
-                }
-            };
-            qList.push(qClass);
-            qClass.drawMe();
-            startingY += ySpacing;
-        }
-         */
         drawStuff(pSize, hSize, qSize);
-        //console.log(pList);
-        //console.log(hList);
-        //console.log(qList);
-        document.getElementById("pDisplay").innerHTML = "Ratio: " + (pSize / populationSize);
-        document.getElementById("hDisplay").innerHTML = "Ratio: " + (hSize / populationSize);
-        document.getElementById("qDisplay").innerHTML = "Ratio: " + (qSize / populationSize);
+        //document.getElementById("pDisplay").innerHTML = "Ratio: " + (pSize / populationSize);
+        //document.getElementById("hDisplay").innerHTML = "Ratio: " + (hSize / populationSize);
+        //document.getElementById("qDisplay").innerHTML = "Ratio: " + (qSize / populationSize);
         ctx = display.canvas.getContext("2d");
         ctx.font = "24px Avenir Next";
         ctx.fillText("Predicted Population:", 4, 20);
-        ctx.font = "20px serif";
+        ctx.font = "20px Avenir Next";
         ctx.fillText("Homozygous Dominant: " + pSize + " individuals", 20, 48);
         ctx.fillText("Heterozygous: " + hSize + " individuals", 500, 48);
         ctx.fillText("Homozygous Recessive: " + qSize + " individuals", 900, 48);
@@ -326,3 +246,28 @@ function startSimulation(){
 function thanosSnap(){
     
 }
+
+$(function() {
+	var rangePercent = $('[type="range"]').val();
+
+	$('[type="range"]').on('change input', function() {
+		rangePercent = Math.floor($('[type="range"]').val()*100);
+
+        var dominant = rangePercent/100;
+        var recessive = 1-dominant;
+
+        var homodominant = dominant ** 2; // ** is exponent
+        var heterozygous = 2 * dominant * recessive;
+        var homorecessive = recessive ** 2;
+
+		$('h4').html(rangePercent + "/" + (100-rangePercent) +'<span></span>');
+		$('[type="range"], h4>span').css('filter', 'hue-rotate(' + (rangePercent) + 'deg)');
+		$('h4').css({'transform': 'translateX(-50%) scale(' + (1+(rangePercent/150)) + ')', 'left': rangePercent+'%'});
+	
+        document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000) / 100; 
+        document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000) / 100;
+        document.getElementById("hrDisplay").innerHTML = Math.round(homorecessive * 10000) / 100;
+        document.getElementById("p").innerHTML = Math.round(dominant*100)/100;
+        document.getElementById("q").innerHTML = Math.round(recessive*100)/100;
+    });
+});

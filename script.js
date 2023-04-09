@@ -1,9 +1,7 @@
 /*post generation
  this stuff is for after the thing generates everything, should not have null errors
- 
- 
- 
 */
+
 class Population {
     constructor(){
         this.pList = []; //list of dominant individuals
@@ -146,6 +144,7 @@ function getAllele(decimal) {
     console.log("return 0");
     return 0;
 }
+
 function startPrediction(){
     p = parseFloat(document.getElementById("p").innerHTML);
     q = parseFloat(document.getElementById("q").innerHTML);
@@ -182,22 +181,6 @@ function startPrediction(){
         alert("Make sure your p and q values sum to 1, and that p < 1 and q < 1; As well as 10≤popSize≤10000");
         document.getElementById("startSimulation").disabled = true;
     }
-}
-
-function hwEquation(p, q){
-    return [p*p, 2*p*q, q*q];
-}
-
-function draw(text, x, y) {
-    const ctx = display.canvas.getContext("2d");
-    ctx.font = "48px serif";
-    ctx.fillText(text, 10, 50);
-}
-
-function draw(text, fontSize, fontName, x, y) {
-    const ctx = display.canvas.getContext("2d");
-    ctx.font = fontSize+"px " + fontName;
-    ctx.fillText(text, x, y);
 }
 
 function startSimulation(){
@@ -237,18 +220,83 @@ function startSimulation(){
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
     ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
-    ctx.font = "20px serif";
+    ctx.font = "20px Avenir Next";
     ctx.fillText("Homozygous Dominant: " + dominant + " individuals", 20, 48);
     ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
     ctx.fillText("Homozygous Recessive: " + recessive + " individuals", 900, 48);
     //document.getElementById("startSimulation").disabled = false;
 }
 
+function startSimulationNoReplacement(){
+    p = parseFloat(document.getElementById("p").innerHTML);
+    q = parseFloat(document.getElementById("q").innerHTML);
+    console.log("p and q are " + p + " " + q);
+    populationSize = parseFloat(document.getElementById("popSize").value);
+    totalAlleles = populationSize * 2;
+    dominantAlleles = Math.round(totalAlleles * p);
+    recessiveAlleles = Math.round(totalAlleles * q);
+    population.clear();
+    var dominant = 0;
+    var heterozygous = 0;
+    var recessive = 0;
+    //sampling w/o replacement
+    for (let index = 0; index < populationSize; index++){
+        allele1 = getAllele(p);
+        allele2 = getAllele(p);
+        if (allele1 == 0) { recessiveAlleles--; } else { dominantAlleles--; }
+        if (allele2 == 0) { recessiveAlleles--; } else { dominantAlleles--; }
+        totalAlleles -= 2;
+        sNum = allele1 + allele2;
+        if (sNum == 0){
+            recessive++;
+        } else if (sNum == 1){
+            heterozygous++;
+        } else if (sNum == 2){
+            dominant++;
+        }
+        p = dominantAlleles/totalAlleles;
+        q = 1 - p;
+    }
+    console.log("startSimulationNoReplacement()");
+    console.log(dominant);
+    console.log(heterozygous);
+    console.log(recessive);
+    drawStuff(dominant, heterozygous, recessive);
+    
+    document.getElementById("hdDisplay").innerHTML = "Ratio: " + (dominant / populationSize);
+    document.getElementById("heteroDisplay").innerHTML = "Ratio: " + (heterozygous / populationSize);
+    document.getElementById("hrDisplay").innerHTML = "Ratio: " + (recessive / populationSize);
+    ctx = display.canvas.getContext("2d");
+    ctx.font = "24px Avenir Next";
+    ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
+    ctx.font = "20px Avenir Next";
+    ctx.fillText("Homozygous Dominant: " + dominant + " individuals", 20, 48);
+    ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
+    ctx.fillText("Homozygous Recessive: " + recessive + " individuals", 900, 48);
+    //document.getElementById("startSimulation").disabled = false;
+}
+
+function hwEquation(p, q){
+    return [p*p, 2*p*q, q*q];
+}
+
+function draw(text, x, y) {
+    const ctx = display.canvas.getContext("2d");
+    ctx.font = "48px serif";
+    ctx.fillText(text, 10, 50);
+}
+
+function draw(text, fontSize, fontName, x, y) {
+    const ctx = display.canvas.getContext("2d");
+    ctx.font = fontSize+"px " + fontName;
+    ctx.fillText(text, x, y);
+}
+
 function thanosSnap(){
     
 }
 
-$(function() {
+$(function() { //sliders
 	var rangePercent = $('[type="range"]').val();
 
 	$('[type="range"]').on('change input', function() {
@@ -272,7 +320,3 @@ $(function() {
         document.getElementById("q").innerHTML = Math.round(recessive*100)/100;
     });
 });
-
-function randomInt(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-}

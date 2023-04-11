@@ -1,0 +1,95 @@
+body {
+    padding-top: 72px;
+    margin-left: 0px;
+    margin-right: 0px;
+    font-family: Avenir Next;
+    background-color: #c6e2ff;
+}
+
+.topnav {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 80px;
+    background-color: #003366;
+    overflow: hidden;
+    position: fixed;
+}
+  
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #cdeece;
+    text-align: center;
+    padding: 25px 20px;
+    font-weight: bold;
+    font-family: Avenir Next;
+    font-size: 20px;
+    position:relative;
+}
+  
+/* hover settings */
+.topnav a:hover {
+    background-color: #a1e4ff;
+    color: black;
+}
+  
+  /* current option is highlighted */
+.topnav a.active {
+    color: #ff7373;
+}
+
+.logo-image img {
+    width: 209px;
+    height: 158px;
+    border-radius: 0%;
+    overflow: hidden;
+    margin-top: -66px;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+* {
+    box-sizing: border-box;
+  }
+
+.column {
+    float: left;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 5px;
+    height: 500px;
+}
+
+.left {
+    width: 65%;
+    background-color: #c3ddb4;
+}
+
+.right {
+    width: 35%;
+    background-color: #b4dddb;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+h3 {
+    display: block;
+    font-size: 1.15em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 950px) {
+    .column {
+      width: 100%;
+    }
+  }

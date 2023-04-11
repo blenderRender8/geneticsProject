@@ -1,7 +1,7 @@
 /*post generation
  this stuff is for after the thing generates everything, should not have null errors
-*/
 
+*/
 class Population {
     constructor(){
         this.pList = []; //list of dominant individuals
@@ -120,17 +120,46 @@ function drawStuff(pSize, hSize, qSize){
         startingY += ySpacing;
     }
 }
-function calculateNoReplacement(total, dom, het, rec, domdead, hetdead, recdead){
-    dom *= (1 - domdead); //dominant individuals post thanos snap
-    het *= (1 - hetdead); //heterozygous individuals post thanos snap
-    rec *= (1 - recdead); //recessive individuals post thanos snap
+
+function naturalSelection() {
+    selection = document.querySelector('#killSelection').value;
+    console.log("\n" + selection);
+    percentage = 100-document.getElementById("killPercentage").value;
+    populationSize = document.getElementById("popSize").value;
+
+    homodominant = Math.round(populationSize * document.getElementById("hdDisplay").innerHTML/100);
+    heterozygous = Math.round(populationSize * document.getElementById("heteroDisplay").innerHTML/100);
+    homorecessive = Math.round(populationSize * document.getElementById("hrDisplay").innerHTML/100);
+    console.log(document.getElementById("hdDisplay").innerHTML + " " + document.getElementById("heteroDisplay").innerHTML + " " + document.getElementById("hrDisplay").innerHTML);
+    console.log(homodominant + " " + heterozygous + " " + homorecessive);
     
-    t = dom + het + rec; //total individuals post thanos snap
-    
-    p_2 = dom / t; //new p value after thanos snap squared
-    p_2 = Math.sqrt(p_2); //new p value after thanos snap
-    q_2 = 1 - p_2; //new q value after thanos snap
-    return [p_2, q_2]; //final values after thanos snap
+    if(selection == "homodominant") {
+        console.log("homodominant");
+        console.log("before: " + homodominant);
+        homodominant *= percentage/100;
+        homodominant = Math.floor(homodominant);
+        console.log("after: " + homodominant);
+    } else if(selection == "hetero") {
+        console.log("heterozygous");
+        console.log("before: " + heterozygous);
+        heterozygous *= percentage/100;
+        heterozygous = Math.floor(heterozygous);
+        console.log("after: " + heterozygous);
+    } else {
+        console.log("homorecessive");
+        console.log("before: " + homorecessive);
+        homorecessive *= percentage/100;
+        homorecessive = Math.floor(homorecessive);
+        console.log("after: " + homorecessive);
+    }
+    console.log("before size: " + populationSize);
+    console.log("populations: " + homodominant + " " + heterozygous + " " + homorecessive);
+    populationSize = Math.floor(homodominant + heterozygous + homorecessive);
+    console.log("after size: " + populationSize);
+    document.getElementById("popSize").value = populationSize;
+    document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000/populationSize) / 100;
+    document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
+    document.getElementById("hrDisplay").innerHTML = Math.round(homorecessive * 10000/populationSize) / 100;
 }
 
 function getAllele(decimal) {
@@ -214,9 +243,9 @@ function startSimulation(){
     console.log(recessive);
     drawStuff(dominant, heterozygous, recessive);
     
-    document.getElementById("hdDisplay").innerHTML = "Ratio: " + (dominant / populationSize);
-    document.getElementById("heteroDisplay").innerHTML = "Ratio: " + (heterozygous / populationSize);
-    document.getElementById("hrDisplay").innerHTML = "Ratio: " + (recessive / populationSize);
+    document.getElementById("hdDisplay").innerHTML = Math.round(dominant * 10000/populationSize) / 100;
+    document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
+    document.getElementById("hrDisplay").innerHTML = Math.round(recessive * 10000/populationSize) / 100;
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
     ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
@@ -228,8 +257,6 @@ function startSimulation(){
 }
 
 function startSimulationNoReplacement(){
-    p = parseFloat(document.getElementById("p").innerHTML);
-    q = parseFloat(document.getElementById("q").innerHTML);
     console.log("p and q are " + p + " " + q);
     populationSize = parseFloat(document.getElementById("popSize").value);
     totalAlleles = populationSize * 2;
@@ -263,9 +290,9 @@ function startSimulationNoReplacement(){
     console.log(recessive);
     drawStuff(dominant, heterozygous, recessive);
     
-    document.getElementById("hdDisplay").innerHTML = "Ratio: " + (dominant / populationSize);
-    document.getElementById("heteroDisplay").innerHTML = "Ratio: " + (heterozygous / populationSize);
-    document.getElementById("hrDisplay").innerHTML = "Ratio: " + (recessive / populationSize);
+    document.getElementById("hdDisplay").innerHTML = Math.round(dominant * 100/populationSize) / 100;
+    document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 100/populationSize) / 100;
+    document.getElementById("hrDisplay").innerHTML = Math.round(heterozygous * 100/populationSize) / 100;
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
     ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
@@ -290,10 +317,6 @@ function draw(text, fontSize, fontName, x, y) {
     const ctx = display.canvas.getContext("2d");
     ctx.font = fontSize+"px " + fontName;
     ctx.fillText(text, x, y);
-}
-
-function thanosSnap(){
-    
 }
 
 $(function() { //sliders

@@ -7,7 +7,7 @@
     <meta property="og:description" content="Simulate natural selection with adjustable population sizes, p & q frequencies, and kill functions."/>
     <meta property="og:site_name" content="Genetics Simulator"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="script.js"></script>  
     <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" type="image/x-icon" href="https://i.imgur.com/6nvpgUd.png"/>
@@ -41,43 +41,44 @@
     </header>
 
     <div class="big">
-    <div class="canv">
-    <canvas id="canvas"></canvas>
-    </div>
-    <div class="box-inner-border" id="toEnter">
+        <div class="canv">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="box-inner-border" id="toEnter">
+            <h3 id="dominantLabel">Homozygous Dominant %:</h3> <p id="hdDisplay">...</p>
+
+            <h3 id="heterozygousLabel">Heterozygous %:</h3>
+            <p id="heteroDisplay">...</p>
+
+            <h3 id="recessiveLabel">Homozygous Recessive %:</h3>
+            <p id="hrDisplay">...</p>
+
+            <h3 for="pLabel"> P value:</h3>
+            <p id="p">...</p>
+                
+            <h3 for="qlabel"> Q value:</h3>
+            <p id="q">...</p>
+
+            <label for="popSizeLabel">Population Size:</label>
+            <input placeholder="10-10000" type="number" id="popSize" step="10">
+            <br>
+            <p for="pLabel">p and q frequencies</p>
+            <input type="range" id="pqslider" value="0" min="0" max="1" value="0" step="0.01" class="slider">
+            <div id="h4-container"><div id="h4-subcontainer"><h4><span></span></h4></div></div>
+            <br>
+
         
-    <h3 id="dominantLabel">Homozygous Dominant:</h3>
-    <p id="hdDisplay">...</p>
+            <input placeholder="Percentage to kill" type="number" id="killPercentage" step="1">
 
-    <h3 id="heterozygousLabel">Heterozygous:</h3>
-    <p id="heteroDisplay">...</p>
+            <select id="killSelection">
+                <option value="homodominant">Homozygous Dominant</option>
+                <option value="hetero">Heterozygous</option>
+                <option value="homorecessive">Homozygous Recessive</option>
+            </select>
+            <button onclick="naturalSelection()" class="button kill" id="naturalSelection">Kill</button>
 
-    <h3 id="recessiveLabel">Homozygous Recessive:</h3>
-    <p id="hrDisplay">...</p>
-
-    <label for="pLabel"> P value:</label>
-    <p id="p">...</p>
-        
-    <label for="qlabel"> Q value:</label>
-    <p id="q">...</p>
-
-    <br>
-    <label for="popSizeLabel">Set Population Size (between 10-10000 individuals):</label>
-    <input type="number" id="popSize" step="1">
-    <br> <br>
-    <label for="pLabel">p and q frequencies</label>
-    <input type="range" id="pqslider" value="0" min="0" max="1" value="0" step="0.01" class="slider">
-    <div id="h4-container"><div id="h4-subcontainer"><h4><span></span></h4></div></div>
-    <br>
-    <label for="dominantKill">% of Homozygous Dominant to Kill:</label>
-    <input type="number" id="a" step="1">
-    <br>
-    <label for="heterozygousKill">% of Heterozygous to Kill:</label>
-    <input type="number" id="b" step="1">
-    <br>
-    <label for="recessiveKill">% of Homozygous Recessive to Kill:</label>
-    <input type="number" id="c" step="1">
-    </div>
+        </div>
     <br>
     <button onclick="startPrediction()" class="button prediction" id="startPrediction"> Start Prediction</button>
     <button onclick="startSimulation()" class="button simulation" id="startSimulation">Start Simulation</button>
@@ -134,7 +135,6 @@
     startGame();
 </script>
 
-<script src="script.js"></script>
 </body>
 
 </html>

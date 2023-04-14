@@ -160,6 +160,15 @@ function naturalSelection() {
     document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000/populationSize) / 100;
     document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
     document.getElementById("hrDisplay").innerHTML = Math.round(homorecessive * 10000/populationSize) / 100;
+
+    drawStuff(homodominant, heterozygous, homorecessive);
+    ctx = display.canvas.getContext("2d");
+    ctx.font = "24px Avenir Next";
+    ctx.fillText("Predicted Population:", 4, 20);
+    ctx.font = "20px Avenir Next";
+    ctx.fillText("Homozygous Dominant: " + homodominant + " individuals", 20, 48);
+    ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
+    ctx.fillText("Homozygous Recessive: " + homorecessive + " individuals", 900, 48);
 }
 
 function getAllele(decimal) {

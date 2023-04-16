@@ -164,7 +164,7 @@ function naturalSelection() {
     drawStuff(homodominant, heterozygous, homorecessive);
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
-    ctx.fillText("Predicted Population:", 4, 20);
+    ctx.fillText("Population(After Natural Selection):", 4, 20);
     ctx.font = "20px Avenir Next";
     ctx.fillText("Homozygous Dominant: " + homodominant + " individuals", 20, 48);
     ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
@@ -174,12 +174,9 @@ function naturalSelection() {
 function getAllele(decimal) {
     //returns 1 if dominant, 0 if recessive
     num = Math.random();
-    console.log(num + " < " + decimal);
     if (num < decimal){
-        console.log("return 1");
         return 1;
     }
-    console.log("return 0");
     return 0;
 }
 
@@ -257,7 +254,7 @@ function startSimulation(){
     document.getElementById("hrDisplay").innerHTML = Math.round(recessive * 10000/populationSize) / 100;
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
-    ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
+    ctx.fillText("Population (Selection With Replacement):", 4, 20);
     ctx.font = "20px Avenir Next";
     ctx.fillText("Homozygous Dominant: " + dominant + " individuals", 20, 48);
     ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
@@ -266,6 +263,8 @@ function startSimulation(){
 }
 
 function startSimulationNoReplacement(){
+    p = parseFloat(document.getElementById("p").innerHTML);
+    q = parseFloat(document.getElementById("q").innerHTML);
     console.log("p and q are " + p + " " + q);
     populationSize = parseFloat(document.getElementById("popSize").value);
     totalAlleles = populationSize * 2;
@@ -299,12 +298,12 @@ function startSimulationNoReplacement(){
     console.log(recessive);
     drawStuff(dominant, heterozygous, recessive);
     
-    document.getElementById("hdDisplay").innerHTML = Math.round(dominant * 100/populationSize) / 100;
-    document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 100/populationSize) / 100;
-    document.getElementById("hrDisplay").innerHTML = Math.round(heterozygous * 100/populationSize) / 100;
+    document.getElementById("hdDisplay").innerHTML = Math.round(dominant * 10000/populationSize) / 100;
+    document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
+    document.getElementById("hrDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
-    ctx.fillText("Population (Selection w/ Replacement):", 4, 20);
+    ctx.fillText("Population (Selection Without Replacement):", 4, 20);
     ctx.font = "20px Avenir Next";
     ctx.fillText("Homozygous Dominant: " + dominant + " individuals", 20, 48);
     ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);

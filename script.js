@@ -300,7 +300,7 @@ function startSimulationNoReplacement(){
     
     document.getElementById("hdDisplay").innerHTML = Math.round(dominant * 10000/populationSize) / 100;
     document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
-    document.getElementById("hrDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
+    document.getElementById("hrDisplay").innerHTML = Math.round(recessive * 10000/populationSize) / 100;
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
     ctx.fillText("Population (Selection Without Replacement):", 4, 20);

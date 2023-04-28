@@ -18,25 +18,56 @@ class Population {
         this.qList.push(qClass);
     }
     clear = function(){
-        const pList = []; //list of dominant individuals
-        const hList = []; //list of heterozygous individuals
-        const qList = []; //list of reccesive individuals
+        this.pList = []; //list of dominant individuals
+        this.hList = []; //list of heterozygous individuals
+        this.qList = []; //list of reccesive individuals
     }
     pSize = function(){
-        return pList.size();
+        return this.pList.length;
     }
     hSize = function(){
-        return hList.size();
+        return this.hList.length;
     }
     qSize = function(){
-        return qList.size();
+        return this.qList.length;
+    }
+    size = function(){
+        return this.pSize() + this.hSize() + this.qSize();
     }
     kill = function(dP, hP, qP){
         
     }
+    kill = function(l){
+        var dP = l[0];
+        var hP = l[1];
+        var qP = l[2];
+        kill(dP, hP, qP);
+    }
+    naturalSelection = function(l){
+        console.log("L L L L L  L LL L L L  L: " + l);
+        var dP = l[0];
+        var hP = l[1];
+        var qP = l[2];
+        const pTemp = this.pList;
+        const hTemp = this.hList;
+        const qTemp = this.qList;
+        console.log("dfghufdijsfhids: " + [this.pSize(), this.hSize(), this.qSize()]);
+        var pLeft = Math.round(this.pSize() * dP);
+        var hLeft = Math.round(this.hSize() * hP);
+        var qLeft = Math.round(this.qSize() * qP);
+        this.clear();
+        console.log("efgfdsdfgfdsdf: " + [pLeft, hLeft, qLeft]);
+        console.log("但是我話你知: " + [this.pSize(), this.hSize(), this.qSize()]);
+        return [pLeft, hLeft, qLeft];
+    }
+    ratio = function(){
+        var p = Math.sqrt(this.pSize() / this.size());
+        var q = 1 - p;
+        console.log("ratios: " + p + " | " + q);
+        return [p, q];
+    }
 };
 const population = new Population();
-population.addP(0);
 
 function drawStuff(pSize, hSize, qSize){
     const context = canvas.getContext('2d');
@@ -124,9 +155,17 @@ function drawStuff(pSize, hSize, qSize){
 function naturalSelection() {
     selection = document.querySelector('#killSelection').value;
     console.log("\n" + selection);
-    percentage = 100-document.getElementById("killPercentage").value;
+    
+    //work here editing dropdown stuffs i guess i mean 12 is a number under 13 therefore by the pythagorean theorem 5 should be outputed. since 5 is prime, prime numbers of prime, so 6 is coprime with 7 because 6 isn't prime and divisble by 7 and 7 is prime and not divisible by 6.
+    
+    //edit here
+    const percentage = [(100-document.getElementById("killPercentageDominant").value)/100, (100-document.getElementById("killPercentageHetero").value)/100, (100-document.getElementById("killPercentageRecessive").value)/100];
     populationSize = document.getElementById("popSize").value;
-
+    
+    const sus = population.naturalSelection(percentage);
+    
+    
+    /*
     homodominant = Math.round(populationSize * document.getElementById("hdDisplay").innerHTML/100);
     heterozygous = Math.round(populationSize * document.getElementById("heteroDisplay").innerHTML/100);
     homorecessive = Math.round(populationSize * document.getElementById("hrDisplay").innerHTML/100);
@@ -156,19 +195,29 @@ function naturalSelection() {
     console.log("populations: " + homodominant + " " + heterozygous + " " + homorecessive);
     populationSize = Math.floor(homodominant + heterozygous + homorecessive);
     console.log("after size: " + populationSize);
-    document.getElementById("popSize").value = populationSize;
-    document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000/populationSize) / 100;
+    */
+    
+    /*
+    document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000 / populationSize ) / 100;
     document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000/populationSize) / 100;
     document.getElementById("hrDisplay").innerHTML = Math.round(homorecessive * 10000/populationSize) / 100;
-
-    drawStuff(homodominant, heterozygous, homorecessive);
+    */
+    console.log("sus: " + sus);
+    drawStuff(sus[0], sus[1], sus[2]);
     ctx = display.canvas.getContext("2d");
     ctx.font = "24px Avenir Next";
     ctx.fillText("Population(After Natural Selection):", 4, 20);
     ctx.font = "20px Avenir Next";
-    ctx.fillText("Homozygous Dominant: " + homodominant + " individuals", 20, 48);
-    ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
-    ctx.fillText("Homozygous Recessive: " + homorecessive + " individuals", 900, 48);
+    ctx.fillText("Homozygous Dominant: " + sus[0] + " individuals", 20, 48);
+    ctx.fillText("Heterozygous: " + sus[1] + " individuals", 500, 48);
+    ctx.fillText("Homozygous Recessive: " + sus[2] + " individuals", 900, 48);
+    document.getElementById("popSize").value = population.size();
+    document.getElementById("hdDisplay").innerHTML = (population.pSize() / population.size());
+    document.getElementById("heteroDisplay").innerHTML = (population.hSize() / population.size());
+    document.getElementById("hrDisplay").innerHTML = (population.qSize() / population.size());
+    var ratio = population.ratio();
+    document.getElementById("p").innerHTML = ratio[0];
+    document.getElementById("q").innerHTML = ratio[1];
 }
 
 function getAllele(decimal) {
@@ -310,7 +359,18 @@ function startSimulationNoReplacement(){
     ctx.fillText("Homozygous Recessive: " + recessive + " individuals", 900, 48);
     //document.getElementById("startSimulation").disabled = false;
 }
-
+function calculateNoReplacement(total, dom, het, rec, domdead, hetdead, recdead){
+    dom *= (1 - domdead); //dominant individuals post thanos snap
+    het *= (1 - hetdead); //heterozygous individuals post thanos snap
+    rec *= (1 - recdead); //recessive individuals post thanos snap
+    
+    t = dom + het + rec; //total individuals post thanos snap
+    
+    p_2 = dom / t; //new p value after thanos snap squared
+    p_2 = Math.sqrt(p_2); //new p value after thanos snap
+    q_2 = 1 - p_2; //new q value after thanos snap
+    return [p_2, q_2]; //final values after thanos snap
+}
 function hwEquation(p, q){
     return [p*p, 2*p*q, q*q];
 }
@@ -328,10 +388,10 @@ function draw(text, fontSize, fontName, x, y) {
 }
 
 $(function() { //sliders
-	var rangePercent = $('[type="range"]').val();
+    var rangePercent = $('[type="range"]').val();
 
-	$('[type="range"]').on('change input', function() {
-		rangePercent = Math.floor($('[type="range"]').val()*100);
+    $('[type="range"]').on('change input', function() {
+        rangePercent = Math.floor($('[type="range"]').val()*100);
 
         var dominant = rangePercent/100;
         var recessive = 1-dominant;
@@ -340,11 +400,11 @@ $(function() { //sliders
         var heterozygous = 2 * dominant * recessive;
         var homorecessive = recessive ** 2;
 
-		$('h4').html(rangePercent + "/" + (100-rangePercent) +'<span></span>');
-		$('[type="range"], h4>span').css('filter', 'hue-rotate(' + (rangePercent) + 'deg)');
-		$('h4').css({'transform': 'translateX(-50%) scale(' + (1+(rangePercent/150)) + ')', 'left': rangePercent+'%'});
-	
-        document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000) / 100; 
+        $('h4').html(rangePercent + "/" + (100-rangePercent) +'<span></span>');
+        $('[type="range"], h4>span').css('filter', 'hue-rotate(' + (rangePercent) + 'deg)');
+        $('h4').css({'transform': 'translateX(-50%) scale(' + (1+(rangePercent/150)) + ')', 'left': rangePercent+'%'});
+    
+        document.getElementById("hdDisplay").innerHTML = Math.round(homodominant * 10000) / 100;
         document.getElementById("heteroDisplay").innerHTML = Math.round(heterozygous * 10000) / 100;
         document.getElementById("hrDisplay").innerHTML = Math.round(homorecessive * 10000) / 100;
         document.getElementById("p").innerHTML = Math.round(dominant*100)/100;

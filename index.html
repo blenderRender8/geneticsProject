@@ -8,23 +8,26 @@
     <meta property="og:site_name" content="Genetics Simulator"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script type="text/javascript" src="script.js"></script>  
+    <script type="text/javascript" src="script.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" type="image/x-icon" href="https://i.imgur.com/6nvpgUd.png"/>
 
-<script>
-    function initHTML(){
-       gaming.start();
-    }
-    var gaming = {
-        h1HTML: document.createElement("h1"),
-        start: function() {
-            this.h1HTML.innerHTML = "Genetics Simulator";
-            document.body.insertBefore(this.h1HTML, document.head.childNodes[0]);
+    <script>
+        function initHTML(){
+           gaming.start();
         }
-    }
-</script>
-
+        var gaming = {
+            h1HTML: document.createElement("h1"),
+            start: function() {
+                this.h1HTML.innerHTML = "Genetics Simulator";
+                document.body.insertBefore(this.h1HTML, document.head.childNodes[0]);
+            }
+        }
+    </script>
+    
+    <!--- import charts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+  
 </head>
 
 <body onload="startGame();">
@@ -39,7 +42,6 @@
         <a href="about.html">About</a>
         <a href="https://github.com/blenderRender8/geneticsProject" target="_blank">Repository</a>
     </header>
-
     <div class="big">
         <div class="canv">
             <canvas id="canvas"></canvas>
@@ -56,7 +58,7 @@
 
             <h3 for="pLabel"> P value:</h3>
             <p id="p">...</p>
-                
+
             <h3 for="qlabel"> Q value:</h3>
             <p id="q">...</p>
 
@@ -66,24 +68,78 @@
             <p for="pLabel">p and q frequencies</p>
             <input type="range" id="pqslider" value="0" min="0" max="1" value="0" step="0.01" class="slider">
             <div id="h4-container"><div id="h4-subcontainer"><h4><span></span></h4></div></div>
-            <br>
-
-        
-            <input placeholder="Percentage to kill" type="number" id="killPercentage" step="1">
-
-            <select id="killSelection">
-                <option value="homodominant">Homozygous Dominant</option>
-                <option value="hetero">Heterozygous</option>
-                <option value="homorecessive">Homozygous Recessive</option>
-            </select>
-            <button onclick="naturalSelection()" class="button kill" id="naturalSelection">Kill</button>
-
-        </div>
+                <br>
+                <!--edit here-->
+                <input placeholder="Percentage (%) to kill (Homozygous Dominant)" type="number" id="killPercentageDominant" step="1">
+                <input placeholder="Percentage (%) to kill (Heterozygous)" type="number" id="killPercentageHetero" step="1">
+                <input placeholder="Percentage (%) to kill (Homozygous Recessive)" type="number" id="killPercentageRecessive" step="1">
+                    
+                <select id="killSelection">
+                    <option value="homodominant">Homozygous Dominant</option>
+                    <option value="hetero">Heterozygous</option>
+                    <option value="homorecessive">Homozygous Recessive</option>
+                </select>
+                <button onclick="naturalSelection()" class="button kill" id="naturalSelection">Kill</button>
+            </div>
     <br>
+    <!--<tr> 於此
+        <td>
+            <label for="popSizeLabel">Set Population Size (between 10-10000 individuals):</label>
+        </td>
+        <td>
+            <input type="number" id="popSize" step="0.01">
+        </td>
+        <br>
+        <td>
+            <label for="pLabel">"p" as decimal (frequency of dominant allele)</label>
+        </td>
+        <td>
+            <input type="number" id="p" step="0.01">
+        </td>
+        <br>
+        <td>
+            <label for="qLabel">"q" as a decimal (frequency of recessive allele)</label>
+        </td>
+        <td>
+            <input type="number" id="q" step="0.01">
+        </td>
+    </tr>
+    <br><br>
+    <tr>
+        <td>
+            <label for="dominantKill">% of Homozygous Dominant to Kill:</label>
+        </td>
+        <td>
+            <input type="number" id="pKill" step="0.01">
+        </td>
+        <br>
+        <td>
+            <label for="heterozygousKill">% of Heterozygous to Kill:</label>
+        </td>
+        <td>
+            <input type="number" id="hKill" step="0.01">
+        </td>
+        <br>
+        <td>
+            <label for="recessiveKill">% of Homozygous Recessive to Kill:</label>
+        </td>
+        <td>
+            <input type="number" id="qKill" step="0.01">
+        </td>
+    </tr>
+    </div>
+    <br>
+    </div>
+    <div class="left">
+        <button onclick="pushButton()" class="button prediction" id="startPrediction"> Start Prediction</button>
+    </div>
+    <br>
+    <div id="right">
+        <button type="button" class="button simulation" id="startSimulation" onclick = "startSimulation()">Start Simulation</button>
+    </div>-->
     <button onclick="startPrediction()" class="button prediction" id="startPrediction"> Start Prediction</button>
     <button onclick="startSimulation()" class="button simulation" id="startSimulation">Start Simulation</button>
     <button onclick="startSimulationNoReplacement()" class="button noreplacement" id="startSimulationNoReplacement">Sampling w/o Replacement</button>
-
 <script>
     function determineSize(){
         var w = window.innerWidth;
@@ -92,6 +148,7 @@
       console.log("running startGame0");
       var canvasWidth = 1280;
       var canvasHeight = 720;
+      
 
       var populationSize;
       var p; //frequency of dominant allele
@@ -134,7 +191,6 @@
     qImage.src = "blue_sprite.png";
     startGame();
 </script>
-
 </body>
 
 </html>

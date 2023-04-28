@@ -44,7 +44,7 @@
     </header>
     <div class="big">
         <div class="canv">
-            <canvas id="canvas"></canvas>
+            <canvas class="game" id="canvas"></canvas>
         </div>
 
         <div class="box-inner-border" id="toEnter">
@@ -80,6 +80,8 @@
                     <option value="homorecessive">Homozygous Recessive</option>
                 </select>
                 <button onclick="naturalSelection()" class="button kill" id="naturalSelection">Kill</button>
+                <label for="gLabel"># of Generations:</label>
+                <input placeholder="capped at 100" type="number" id="generations" step="1">
             </div>
     <br>
     <!--<tr> 於此
@@ -140,6 +142,8 @@
     <button onclick="startPrediction()" class="button prediction" id="startPrediction"> Start Prediction</button>
     <button onclick="startSimulation()" class="button simulation" id="startSimulation">Start Simulation</button>
     <button onclick="startSimulationNoReplacement()" class="button noreplacement" id="startSimulationNoReplacement">Sampling w/o Replacement</button>
+    <button onclick="runGeneFlow()" class="button noreplacement" id="geneFlow">Gene Flow</button>
+    <canvas class="chart" id="dataChart" style="width:100%;max-width:700px; height:300px;"></canvas>
 <script>
     function determineSize(){
         var w = window.innerWidth;

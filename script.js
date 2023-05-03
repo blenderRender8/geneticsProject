@@ -238,7 +238,9 @@ function getAllele(decimal) {
     }
     return 0;
 }
-
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 function startPrediction(){
     p = parseFloat(document.getElementById("p").innerHTML);
     q = parseFloat(document.getElementById("q").innerHTML);
@@ -277,7 +279,7 @@ function startPrediction(){
     }
 }
 
-function startSimulation(){
+async function startSimulation(){
     p = parseFloat(document.getElementById("p").innerHTML);
     q = parseFloat(document.getElementById("q").innerHTML);
     generations = Math.round(document.getElementById("generations").value);
@@ -288,7 +290,10 @@ function startSimulation(){
     population.setQ(q);
     console.log("p and q are " + p + " " + q);
     populationSize = parseFloat(document.getElementById("popSize").value);
-    if (p+q == 1 && populationSize >= 10 && populationSize <= 10000){ //fufills all requirements
+    if (p+q == 1 && populationSize >= 10 && populationSize <= 10000){
+        wan = [];
+        for (let amog = 0; amog < generations; amog++){
+        //fufills all requirements
         totalAlleles = populationSize * 2;
         dominantAlleles = Math.round(totalAlleles * p);
         recessiveAlleles = Math.round(totalAlleles * q);
@@ -326,6 +331,52 @@ function startSimulation(){
         ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
         ctx.fillText("Homozygous Recessive: " + recessive + " individuals", 900, 48);
         //document.getElementById("startSimulation").disabled = false;
+        wan.push(population);
+        await delay(100);
+        }
+        de = [[], [], []];
+        for (let a = 0; a < wan.length; a++){
+            de[0].push(wan[a].pSize());
+            de[1].push(wan[a].hSize());
+            de[2].push(wan[a].qSize());
+        }
+        const xValues = [];
+        for (let ininin = 1; ininin <= generations; ininin++){
+            xValues.push(ininin);
+        }
+        try {
+        chart.destroy();
+        } catch (ReferenceError) {
+        } finally {
+        }
+        var chartName = document.getElementById("dataChart").getContext('2d');
+        chart = new Chart(chartName, {
+          type: "line",
+          data: {
+            labels: xValues,
+            datasets: [{
+              data: de[0],
+            label:"Homozygous Dominant",
+              borderColor: "red",
+              fill: false
+            },{
+              data: de[1],
+            label:"Heterozygous",
+              borderColor: "purple",
+              fill: false
+            },{
+              data: de[2],
+            label:"Homozygous Recessive",
+              borderColor: "blue",
+              fill: false
+            }]
+          },
+          options: {
+            legend: {display: false}
+          },
+        labels: ['# Generations', '']
+        });
+        chart.resize(1280, 720);
     } else{
             alert("Make sure your p and q values sum to 1, and that p < 1 and q < 1; As well as 10≤popSize≤10000");
     }
@@ -411,9 +462,6 @@ function draw(text, fontSize, fontName, x, y) {
     ctx.fillText(text, x, y);
 }
                                                                 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 async function runGeneFlow(){
     generations = Math.round(document.getElementById("generations").value);
         
@@ -463,47 +511,56 @@ async function runGeneFlow(){
         console.log(fin_dat + "    hello");
         
         var chartName = document.getElementById("dataChart").getContext('2d');
+        console.log(fin_dat[0]);
         chart = new Chart(chartName, {
           type: "line",
           data: {
             labels: xValues,
             datasets: [{
               data: fin_dat[0],
+            label:"Pop #1 Homozygous Dominant",
               borderColor: "red",
               fill: false
             },{
               data: fin_dat[1],
+            label:"Pop #1 Heterozygous",
               borderColor: "purple",
               fill: false
             },{
               data: fin_dat[2],
+            label:"Pop #1 Homozygous Recessive",
               borderColor: "blue",
               fill: false
             },{
             data: fin_dat[3],
+            label:"Pop #2 Homozygous Dominant",
             borderColor: "yellow",
             fill: false
             },{
             data: fin_dat[4],
+            label:"Pop #2 Heterozygous",
             borderColor: "orange",
             fill: false
             },{
             data: fin_dat[5],
+            label:"Pop #2 Homozygous Recessive",
             borderColor: "green",
             fill: false
             }]
           },
           options: {
             legend: {display: false}
-          }
+          },
+        labels: ['# Generations', '']
         });
 }
 function geneFlow(){
     var population1 = new Population();
+    var population2 = new Population();
     p = parseFloat(document.getElementById("p").innerHTML);
     q = parseFloat(document.getElementById("q").innerHTML);
-    population.setP(p);
-    population.setQ(q);
+    population2.setP(p);
+    population2.setQ(q);
     population1.setP(p);
     population1.setQ(q);
     console.log("p and q are " + p + " " + q);
@@ -511,7 +568,6 @@ function geneFlow(){
     totalAlleles = populationSize * 2;
     dominantAlleles = Math.round(totalAlleles * p);
     recessiveAlleles = Math.round(totalAlleles * q);
-    population.clear();
     //sampling w/ replacement
     var transferChance = 0.1;
     for (let index = 0; index < populationSize; index++){
@@ -521,11 +577,11 @@ function geneFlow(){
         sNum = allele1 + allele2;
         if (n > transferChance){
             if (sNum == 0){
-                population.addQ(1);
+                population2.addQ(1);
             } else if (sNum == 1){
-                population.addH(1);
+                population2.addH(1);
             } else if (sNum == 2){
-                population.addP(1);
+                population2.addP(1);
             }
         } else{
             if (sNum == 0){
@@ -550,11 +606,11 @@ function geneFlow(){
             }
         } else{
             if (sNum == 0){
-                population.addQ(1);
+                population2.addQ(1);
             } else if (sNum == 1){
-                population.addH(1);
+                population2.addH(1);
             } else if (sNum == 2){
-                population.addP(1);
+                population2.addP(1);
             }
         }
     }
@@ -570,15 +626,15 @@ function geneFlow(){
     context.moveTo(1280/2, 0);
     context.lineTo(1280/2, 720);
     context.stroke();
-    drawPopCircle(population.pSize(), 150+5, 150+5, 0, population);
-    drawPopCircle(population.hSize(), 150+5, 720-150-5, 1, population);
-    drawPopCircle(population.qSize(), 640-150-5, 360, 4, population);
+    drawPopCircle(population2.pSize(), 150+5, 150+5, 0, population2);
+    drawPopCircle(population2.hSize(), 150+5, 720-150-5, 1, population2);
+    drawPopCircle(population2.qSize(), 640-150-5, 360, 4, population2);
         
     drawPopCircle(population1.pSize(), 1280-(150+5), 150+5, 2, population1);
     drawPopCircle(population1.hSize(), 1280-(150+5), 720-150-5, 3, population1);
     drawPopCircle(population1.qSize(), 640+150+5, 360, 5, population1);
     
-    return [population, population1];
+    return [population2, population1];
 }
 function drawPopCircle(num, x, y, colorNum, pop) {
     //console.log(pop.getMax() + "|||||| : " + num);

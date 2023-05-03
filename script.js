@@ -331,14 +331,26 @@ async function startSimulation(){
         ctx.fillText("Heterozygous: " + heterozygous + " individuals", 500, 48);
         ctx.fillText("Homozygous Recessive: " + recessive + " individuals", 900, 48);
         //document.getElementById("startSimulation").disabled = false;
-        wan.push(population);
-        await delay(100);
+        wan.push([population.pSize(), population.hSize(), population.qSize()]);
+                                                                    
+                                                                    var del = 1000;
+                                                                    
+                                                                    if (generations > 10){
+                                                                        del/=2;
+                                                                    }
+                                                                    if (generations > 20){
+                                                                        del/=2;
+                                                                    }
+                                                                    if (generations > 30){
+                                                                        del = 0;
+                                                                    }
+        await delay(del);
         }
         de = [[], [], []];
         for (let a = 0; a < wan.length; a++){
-            de[0].push(wan[a].pSize());
-            de[1].push(wan[a].hSize());
-            de[2].push(wan[a].qSize());
+            de[0].push(wan[a][0]);
+            de[1].push(wan[a][1]);
+            de[2].push(wan[a][2]);
         }
         const xValues = [];
         for (let ininin = 1; ininin <= generations; ininin++){
